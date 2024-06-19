@@ -1,22 +1,20 @@
-package com.example.tasktrackerscheduler.service.impl;
+package com.example.tasktrackerscheduler.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.example.tasktracker.domain.entity.Task;
-import com.example.tasktracker.security.entity.User;
 import com.example.tasktrackerscheduler.dto.EmailMessage;
-import com.example.tasktrackerscheduler.service.EmailFormer;
+import com.example.tasktrackerscheduler.entity.Task;
+import com.example.tasktrackerscheduler.entity.User;
 
 @Component
-public class EmailFormerImpl implements EmailFormer {
+public class EmailFormer {
 
 	private static final String subject = "Ежедневное уведомление от Task tracker";
 	private static final int tasksToDisplayCount = 5;
 	
-	@Override
 	public EmailMessage formMessage(User user, List<Task> tasks) {
 		EmailMessage message = new EmailMessage();
 		
@@ -24,7 +22,7 @@ public class EmailFormerImpl implements EmailFormer {
 		String username = email.split("@")[0];
 		StringBuilder body = new StringBuilder();
 		
-		body.append("Привет %s!\n".formatted(username));
+		body.append("Привет, %s!\n".formatted(username));
 		
 		List<Task> finishedTodayTasks = new ArrayList<>();
 		List<Task> unfinishedTasks = new ArrayList<>();
@@ -53,27 +51,37 @@ public class EmailFormerImpl implements EmailFormer {
 	}
 
 	private void addInfoAboutFinishedTodayTasks(StringBuilder body, List<Task> finishedTodayTasks) {
+		String correctForm = getCorrectForm(finishedTodayTasks.size());
 		body.append(
-				"За сегодня вы выполнили %d задач:\n".formatted(finishedTodayTasks.size())
+				"За сегодня вы выполнили %d %s:\n".formatted(finishedTodayTasks.size(), correctForm)
 		);
 		addTasksTitlesToBody(body, finishedTodayTasks);
 	}
 
 	private void addInfoAboutUnfinishedTasks(StringBuilder body, List<Task> unfinishedTasks) {
+		String correctForm = getCorrectForm(unfinishedTasks.size());
 		body.append(
-				"Вам осталось выполнить %d задач:\n".formatted(unfinishedTasks.size())
+				"Вам осталось выполнить %d %s:\n".formatted(unfinishedTasks.size(), correctForm)
 		);
 		addTasksTitlesToBody(body, unfinishedTasks);
 	}
 	
+	private String getCorrectForm(int size) {
+		if (size % 10 == 1)
+			return "задачу";
+		if (size % 10 < 5)
+			return "задачи";
+		return "задач";
+	}
+	
 	private void addTasksTitlesToBody(StringBuilder body, List<Task> tasks) {
-		tasks
-			.subList(0, tasksToDisplayCount)
-			.forEach( 
-					task -> body.append(
-								task.getTitle() + "\n"
-							)
+		int n = Math.min(tasks.size(), tasksToDisplayCount);
+		
+		for (int i=0; i<n; i++) {
+			body.append("%d) %s\n"
+					.formatted(i+1, tasks.get(i).getTitle())
 			);
+		}
 		if (tasks.size() > tasksToDisplayCount) {
 			body.append("...\n");
 		}

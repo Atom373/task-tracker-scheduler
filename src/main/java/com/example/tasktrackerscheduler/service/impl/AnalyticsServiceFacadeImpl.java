@@ -3,19 +3,19 @@ package com.example.tasktrackerscheduler.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.example.tasktracker.domain.entity.Task;
-import com.example.tasktracker.domain.service.TaskService;
-import com.example.tasktracker.security.entity.User;
-import com.example.tasktracker.security.service.UserService;
 import com.example.tasktrackerscheduler.dto.EmailMessage;
+import com.example.tasktrackerscheduler.entity.Task;
+import com.example.tasktrackerscheduler.entity.User;
 import com.example.tasktrackerscheduler.service.AnalyticsServiceFacade;
-import com.example.tasktrackerscheduler.service.EmailFormer;
+import com.example.tasktrackerscheduler.service.TaskService;
+import com.example.tasktrackerscheduler.service.UserService;
+import com.example.tasktrackerscheduler.util.EmailFormer;
 
 import lombok.AllArgsConstructor;
 
-@Component
+@Service
 @AllArgsConstructor
 public class AnalyticsServiceFacadeImpl implements AnalyticsServiceFacade {
 
@@ -35,18 +35,11 @@ public class AnalyticsServiceFacadeImpl implements AnalyticsServiceFacade {
 				continue;
 			
 			EmailMessage message = emailFormer.formMessage(user, tasks);
-			
 			messages.add(message);
 			
-			deleteAllMarkedTasks(tasks);
+			taskService.deleteAllMarkedTasks(tasks);
 		}
 		return messages;
-	}
-	
-	private void deleteAllMarkedTasks(List<Task> tasks) {
-		tasks.stream()
-			.filter( task -> task.getIsDeleted() )
-			.forEach( task -> taskService.delete(task.getId()) );
 	}
 
 }
