@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: task-tracker-scheduler
+  datasource:
+    url: jdbc:postgresql://${TASK_TRACKER_DATABASE_HOST:localhost}:${TASK_TRACKER_DATABASE_PORT:5432}/${TASK_TRACKER_DATABASE_NAME:task_tracker}
+    username: ${TASK_TRACKER_DATABASE_USERNAME:postgres}
+    password: ${TASK_TRACKER_DATABASE_PASSWORD:1234}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    queue-name: EMAIL_SENDING_TASKS

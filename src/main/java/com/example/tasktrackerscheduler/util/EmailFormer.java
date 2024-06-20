@@ -1,5 +1,6 @@
 package com.example.tasktrackerscheduler.util;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import com.example.tasktrackerscheduler.entity.User;
 public class EmailFormer {
 
 	private static final String subject = "Ежедневное уведомление от Task tracker";
+	private static final String finishedTasksMessage = "За сегодня вы выполнили %d %s:\n";
+	private static final String unfinishedTasksMessage = "Вам осталось выполнить %d %s:\n";
 	private static final int tasksToDisplayCount = 5;
 	
 	public EmailMessage formMessage(User user, List<Task> tasks) {
@@ -24,24 +27,7 @@ public class EmailFormer {
 		
 		body.append("Привет, %s!\n".formatted(username));
 		
-		List<Task> finishedTodayTasks = new ArrayList<>();
-		List<Task> unfinishedTasks = new ArrayList<>();
-		
-		for (Task task : tasks) {
-			if (task.getWasFinishedToday()) {
-				finishedTodayTasks.add(task);
-			} else if (!task.getIsFinished()) {
-				unfinishedTasks.add(task);
-			}
-		}
-		
-		if (finishedTodayTasks.size() > 0) {
-			addInfoAboutFinishedTodayTasks(body, finishedTodayTasks);
-		}
-		
-		if (unfinishedTasks.size() > 0) {
-			addInfoAboutUnfinishedTasks(body, unfinishedTasks);
-		}
+		addInfoAboutTasks(tasks, body);
 		
 		message.setReceiver(email);
 		message.setSubject(subject);
@@ -50,20 +36,32 @@ public class EmailFormer {
 		return message;
 	}
 
-	private void addInfoAboutFinishedTodayTasks(StringBuilder body, List<Task> finishedTodayTasks) {
-		String correctForm = getCorrectForm(finishedTodayTasks.size());
-		body.append(
-				"За сегодня вы выполнили %d %s:\n".formatted(finishedTodayTasks.size(), correctForm)
-		);
-		addTasksTitlesToBody(body, finishedTodayTasks);
+	private void addInfoAboutTasks(List<Task> tasks, StringBuilder body) {
+		List<Task> finishedTodayTasks = new ArrayList<>();
+		List<Task> unfinishedTasks = new ArrayList<>();
+		
+		for (Task task : tasks) {
+			LocalDate finishingDate = task.getFinishingDate();
+			if (finishingDate != null && finishingDate.isEqual(LocalDate.now())) {
+				finishedTodayTasks.add(task);
+			} else if ( !(task.getIsDeleted() || task.getIsFinished()) ) {
+				unfinishedTasks.add(task);
+			}
+		}
+		addInfoAbout(finishedTodayTasks, finishedTasksMessage, body);
+		addInfoAbout(unfinishedTasks, unfinishedTasksMessage, body);
 	}
-
-	private void addInfoAboutUnfinishedTasks(StringBuilder body, List<Task> unfinishedTasks) {
-		String correctForm = getCorrectForm(unfinishedTasks.size());
+	
+	
+	private void addInfoAbout(List<Task> tasks, String message, StringBuilder body) {
+		if (tasks.isEmpty())
+			return;
+		
+		String correctForm = getCorrectForm(tasks.size());
 		body.append(
-				"Вам осталось выполнить %d %s:\n".formatted(unfinishedTasks.size(), correctForm)
+				message.formatted(tasks.size(), correctForm)
 		);
-		addTasksTitlesToBody(body, unfinishedTasks);
+		addTasksTitlesToBody(body, tasks);
 	}
 	
 	private String getCorrectForm(int size) {
@@ -88,4 +86,3 @@ public class EmailFormer {
 		body.append("\n");
 	}
 }
-

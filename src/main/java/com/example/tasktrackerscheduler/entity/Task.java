@@ -1,5 +1,7 @@
 package com.example.tasktrackerscheduler.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,5 +26,5 @@ public class Task {
 	private User user;
 	
 	private Boolean isDeleted;
-	private Boolean wasFinishedToday;
+	private LocalDate finishingDate;
 }
