@@ -26,6 +26,6 @@ public class EmailMessageEnqueuer {
 	//@Scheduled(fixedDelayString = "PT1M")
 	public void enqueueMessages() {
 		List<EmailMessage> messages = analyticsService.createEmailMessagesForAllUsers();
-		messages.forEach( message -> rabbitTemplate.convertAndSend(queueName, messages));
+		messages.forEach( message -> rabbitTemplate.convertAndSend(queueName, message));
 	}
 }
