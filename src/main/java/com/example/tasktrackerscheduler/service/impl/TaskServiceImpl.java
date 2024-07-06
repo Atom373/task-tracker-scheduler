@@ -24,7 +24,7 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	public void deleteAllMarkedTasks(List<Task> tasks) {
-		tasks = tasks.stream().filter(task -> task.getIsDeleted()).toList();
-		taskRepo.deleteAll(tasks);
+		List<Task> tasksToDelete = tasks.stream().filter(task -> task.getIsDeleted()).toList();
+		taskRepo.deleteAll(tasksToDelete);
 	}
 }
