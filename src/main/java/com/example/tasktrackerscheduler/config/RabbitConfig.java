@@ -15,6 +15,9 @@ public class RabbitConfig {
 	@Value("${spring.rabbitmq.queue-name}")
 	private String queueName;
 	
+	@Value("${spring.rabbitmq.host}")
+	private String host;
+	
 	@Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -22,7 +25,7 @@ public class RabbitConfig {
 	
 	@Bean
 	public ConnectionFactory connectionFactory() {
-		return new CachingConnectionFactory("localhost");
+		return new CachingConnectionFactory(host);
 	}
 	
 	@Bean

@@ -14,9 +14,9 @@ import com.example.tasktrackerscheduler.entity.User;
 public class EmailFormer {
 
 	private static final String subject = "Ежедневное уведомление от Task tracker";
-	private static final String finishedTasksMessage = "За сегодня вы выполнили %d %s:\n";
-	private static final String unfinishedTasksMessage = "Вам осталось выполнить %d %s:\n";
-	private static final int tasksToDisplayCount = 5;
+	private static final String finishedTasksMessage = "<h3>За сегодня вы выполнили %d %s:\n</h3>";
+	private static final String unfinishedTasksMessage = "<h3>Вам осталось выполнить %d %s:\n</h3>";
+	private static final int tasksToDisplayMaxCount = 5;
 	
 	public EmailMessage formMessage(User user, List<Task> tasks) {
 		EmailMessage message = new EmailMessage();
@@ -25,7 +25,7 @@ public class EmailFormer {
 		String username = email.split("@")[0];
 		StringBuilder body = new StringBuilder();
 		
-		body.append("Привет, %s!\n".formatted(username));
+		body.append("<h1>Привет, %s!\n</h1>".formatted(username));
 		
 		addInfoAboutTasks(tasks, body);
 		
@@ -73,16 +73,19 @@ public class EmailFormer {
 	}
 	
 	private void addTasksTitlesToBody(StringBuilder body, List<Task> tasks) {
-		int n = Math.min(tasks.size(), tasksToDisplayCount);
+		int tasksToDisplayCount = Math.min(tasks.size(), tasksToDisplayMaxCount);
 		
-		for (int i=0; i<n; i++) {
-			body.append("%d) %s\n"
-					.formatted(i+1, tasks.get(i).getTitle())
+		body.append("<ol>");
+		
+		for (int i=0; i<tasksToDisplayCount; i++) {
+			body.append("<li> %s\n"
+					.formatted(tasks.get(i).getTitle())
 			);
 		}
-		if (tasks.size() > tasksToDisplayCount) {
-			body.append("...\n");
+		
+		if (tasks.size() > tasksToDisplayMaxCount) {
+			body.append("<li style='list-style-type: none'> ...");
 		}
-		body.append("\n");
+		body.append("</ol>");
 	}
 }
