@@ -11,7 +11,6 @@ import com.example.tasktrackerscheduler.dto.EmailMessage;
 import com.example.tasktrackerscheduler.service.AnalyticsServiceFacade;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
