@@ -10,5 +10,5 @@ public interface TaskService {
 	
 	List<Task> findAllByUser(User user);
 
-	void deleteAllMarkedTasks(List<Task> tasks);
+	void deleteAllMarkedTasks();
 }

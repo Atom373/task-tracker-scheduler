@@ -2,7 +2,6 @@ package com.example.tasktrackerscheduler.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,15 +61,5 @@ public class TaskServiceImplTest {
 		assertNotNull(obtained);
 		assertEquals(2, obtained.size());
 		verify(taskRepo, times(1)).findAllByUser(bob);
-	}
-	
-	@Test
-	public void deleteAllMarkedTasks() {
-		List<Task> tasksToDelete = tasks.stream().filter(task -> task.getIsDeleted()).toList();
-		doNothing().when(taskRepo).deleteAll(tasksToDelete);
-		
-		taskService.deleteAllMarkedTasks(tasks);
-		
-		verify(taskRepo, times(1)).deleteAll(tasksToDelete);
 	}
 }

@@ -53,6 +53,6 @@ public class UserRepositoryTest {
 		
 		// then
 		assertNotNull(obtained);
-		assertEquals(obtained.size(), numberOfUsers);
+		assertEquals(numberOfUsers, obtained.size());
 	}
 }

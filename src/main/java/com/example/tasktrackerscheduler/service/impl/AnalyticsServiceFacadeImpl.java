@@ -35,10 +35,10 @@ public class AnalyticsServiceFacadeImpl implements AnalyticsServiceFacade {
 				continue;
 			
 			EmailMessage message = emailFormer.formMessage(user, tasks);
-			messages.add(message);
-			
-			taskService.deleteAllMarkedTasks(tasks);
+			messages.add(message);	
 		}
+		taskService.deleteAllMarkedTasks();
+		
 		return messages;
 	}
 
