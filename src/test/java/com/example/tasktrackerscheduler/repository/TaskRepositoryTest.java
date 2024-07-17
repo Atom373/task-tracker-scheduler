@@ -82,9 +82,9 @@ public class TaskRepositoryTest {
 		// given
 		
 		// when
-		int numberOfdeletedTasks = taskRepo.deleteAllMarkedTasks();
+		int numberOfDeletedTasks = taskRepo.deleteAllMarkedTasks();
 		
 		// then
-		assertEquals(2, numberOfdeletedTasks);
+		assertEquals(2, numberOfDeletedTasks);
 	}
 }
