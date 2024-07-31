@@ -1,7 +1,7 @@
  <h1>Task tracker scheduler service</h1>
 <p>
   Проект был реализован в соответствии с 
-  <a href="https://zhukovsd.github.io/java-backend-learning-course/Projects/TaskTracker/">
+  <a href="https://zhukovsd.github.io/java-backend-learning-course/projects/task-tracker/">
      тех. заданием.
   </a>
 </p>
